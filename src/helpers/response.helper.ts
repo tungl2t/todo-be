@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { ResponseInterface } from '../interfaces';
+import { IResponse } from '../interfaces';
 import { ErrorMessage } from '../enums';
 
 export class ResponseHelper {
-  public static handle(res: Response, result: ResponseInterface) {
+  public static handle(res: Response, result: IResponse) {
     return res.status(result.code).json(result);
   }
 

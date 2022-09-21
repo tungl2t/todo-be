@@ -96,8 +96,10 @@ export class UserService extends BaseService<User> {
 
       return {
         code: StatusCodes.OK,
-        accessToken,
-        refreshToken,
+        data: {
+          accessToken,
+          refreshToken,
+        },
       };
     } catch (e) {
       return {
@@ -149,8 +151,7 @@ export class UserService extends BaseService<User> {
       RedisService.expire(redisKey);
       return {
         code: StatusCodes.OK,
-        accessToken,
-        refreshToken: newRefreshToken,
+        data: { accessToken, refreshToken: newRefreshToken },
       };
     } catch (e) {
       return {
