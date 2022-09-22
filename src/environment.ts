@@ -19,4 +19,5 @@ export const env = {
   DATABASE_NAME: process.env.DATABASE_NAME,
   REDIS_HOST: process.env.REDIS_HOST,
   REDIS_PORT: process.env?.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+  CORS_ORIGIN: process.env.CORS_ORIGIN,
 };
