@@ -6,10 +6,10 @@ import { User } from '../entities';
 import { BaseService } from './base.service';
 import { CreateUserDto, RefreshTokenDto } from '../dtos';
 import { env } from '../environment';
-import { TokenHelper } from '../helpers';
+import { CommonHelper, TokenHelper } from '../helpers';
 import { ErrorMessage } from '../enums';
 import { RedisService } from './redis.service';
-import { PREFIX_REFRESH_TOKEN_KEY } from '../constants';
+import { REFRESH_TOKEN_TEMPLATE } from '../constants';
 
 export class UserService extends BaseService<User> {
   private static instance: UserService;
@@ -91,7 +91,10 @@ export class UserService extends BaseService<User> {
         },
       );
 
-      const redisKey = `${PREFIX_REFRESH_TOKEN_KEY}${id}:refreshToken:${refreshToken}`;
+      const redisKey = CommonHelper.convertTemplateStringWithObjectProperties(REFRESH_TOKEN_TEMPLATE, {
+        userId: id,
+        refreshToken,
+      });
       RedisService.set(redisKey, refreshToken, env.JWT_REFRESH_TOKEN_EXPIRED_TIME);
 
       return {
@@ -120,7 +123,11 @@ export class UserService extends BaseService<User> {
         };
       }
       const { id, role } = existedUser;
-      const redisKey = `${PREFIX_REFRESH_TOKEN_KEY}${id}:refreshToken:${refreshToken}`;
+      const redisKey = CommonHelper.convertTemplateStringWithObjectProperties(REFRESH_TOKEN_TEMPLATE, {
+        userId: id,
+        refreshToken,
+      });
+
       const existedRefreshToken = await RedisService.get(redisKey);
 
       if (existedRefreshToken !== refreshToken) {
@@ -146,7 +153,11 @@ export class UserService extends BaseService<User> {
           expiredIn: env.JWT_REFRESH_TOKEN_EXPIRED_TIME,
         },
       );
-      const newRedisKey = `${PREFIX_REFRESH_TOKEN_KEY}${id}:refreshToken:${newRefreshToken}`;
+      const newRedisKey = CommonHelper.convertTemplateStringWithObjectProperties(REFRESH_TOKEN_TEMPLATE, {
+        userId: id,
+        refreshToken: newRefreshToken,
+      });
+
       RedisService.set(newRedisKey, newRefreshToken, env.JWT_REFRESH_TOKEN_EXPIRED_TIME);
       RedisService.expire(redisKey);
       return {

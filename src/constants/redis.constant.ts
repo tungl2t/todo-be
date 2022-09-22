@@ -1,1 +1,1 @@
-export const PREFIX_REFRESH_TOKEN_KEY = 'todo:userId:';
+export const REFRESH_TOKEN_TEMPLATE = 'todo-refreshToken:{userId}:{refreshToken}';
